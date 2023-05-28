@@ -2,13 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+            background-color: #f6f6f6;
+        }
+
+        #title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: #f5deb3;
+            color: #444;
+            text-align: center;
+        }
+
+        #post {
+            line-height: 1.5;
+            color: #8b4513;
+            background-color: #f5deb3;
+            font-size: 20px;
+        }
+
+        #author {
+            color: #40E0D0;
+        }
+        #time {
+            color: #40E0D0;
+        }
+        #posts {
+            background-color: #e7e7e7;
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+    </style>
 </head>
+
 <body>
     <a href="{% url 'secondPage' %}">Вторая страница</a>
-    <h1>Hello world</h1>
+    <h1>Посты</h1>
+    {% for post in posts %}
+    <div id="posts">
+        <h3 id="title">{{ post.title }}</h3>
+        <p id="post">{{ post.body }}</p>
+        <p id="author">Author: {{ post.author }}</p>
+        <p id="time">Time: {{ post.created_at }}</p>
+    </div>
+    {% endfor %}
 </body>
 </html>
