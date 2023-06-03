@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Профиль
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <p>
+            Никнейм: {{ user.username }}
+
+        </p>
+        <p>
+            Имя: {{ user.first_name }}
+
+        </p>
+        <p>
+            Почта: {{ user.email }}
+
+        </p>
+            <a href="{% url 'profile_update' pk=profile.pk %}">
+                <button>Изменить данные</button>
+            </a>
+    {% else %}
+        <p>Вы ещё не зарегистрировались. У вас нет профиля</p>
+        <a href="{% url 'register' %}">Зарегистрироваться</a>
+    {% endif %}
+{% endblock content %}

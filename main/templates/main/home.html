@@ -1,56 +1,27 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-    <style>
-        h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 1.5rem;
-            color: #333;
-            background-color: #f6f6f6;
-        }
+{% extends 'base.html' %}
 
-        #title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background-color: #f5deb3;
-            color: #444;
-            text-align: center;
-        }
 
-        #post {
-            line-height: 1.5;
-            color: #8b4513;
-            background-color: #f5deb3;
-            font-size: 20px;
-        }
+{% block title %}
+    Главная страница
+{% endblock title %}
 
-        #author {
-            color: #40E0D0;
-        }
-        #time {
-            color: #40E0D0;
-        }
-        #posts {
-            background-color: #e7e7e7;
-            border: 1px solid black;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-
-<body>
-    <a href="{% url 'secondPage' %}">Вторая страница</a>
-    <h1>Посты</h1>
+{% block content %}
+    <p>Администратор сайта: {{ admin_user.last_name }} {{ admin_user.first_name }}</p>
+    {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Выйти</a>
+        <p><a href="{% url 'profile' %}">Профиль</a></p>
+        <h3>Здравствуйте {{ user.first_name }}!</h3>
+        <h1 id="head">Посты</h1>
     {% for post in posts %}
-    <div id="posts">
-        <h3 id="title">{{ post.title }}</h3>
-        <p id="post">{{ post.body }}</p>
-        <p id="author">Author: {{ post.author }}</p>
-        <p id="time">Time: {{ post.created_at }}</p>
-    </div>
+        <div id="posts">
+            <a href="{% url 'post_detail' pk=post.pk %}"><h3 id="title">{{ post.title }}</h3></a>
+            <p id="post">{{ post.body|truncatewords:30 }}</p>
+            <p id="time">Time: {{ post.created_at }}</p>
+        </div>
     {% endfor %}
-</body>
-</html>
+    {% else %}
+    <a href="{% url 'login' %}"> Войти</a>
+        <h1>Пожалуйста авторизуйтесь</h1>
+
+    {% endif %}
+{% endblock content %}
