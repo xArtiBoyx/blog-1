@@ -10,5 +10,7 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.body }}</p>
     <p>Автор: {{ post.author.last_name }} {{ post.author.first_name }}. Создан: {{ post.created_at }}</p>
-    <a href="{% url 'post_update' pk=post.pk %}"><button>Изменить пост</button></a>
+    {% if user == post.author %}
+        <a href="{% url 'post_update' pk=post.pk %}"><button>Изменить пост</button></a>
+    {% endif %}
 {% endblock content %}

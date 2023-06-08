@@ -5,9 +5,16 @@
     Изменить запись
 {% endblock title %}
 {% block content %}
+    {% if user == post.author %}
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Изменить">
+<!--      <input type="submit" value="Изменить">-->
+      <button type="submit">Изменить</button>
     </form>
+    {% else %}
+        <h1>Нет доступа.</h1>
+        <h3>Вы не можете изменять этот пост</h3>
+        <p>Скорее всего вы видите эту запись потому что не являетесь создателем данного поста</p>
+    {% endif %}
 {% endblock content %}

@@ -1,8 +1,15 @@
-# from django.shortcuts import render, redirect
+# from rest_framework import status
+
 from .models import Post
 from .forms import PostForm
+from .serializers import PostSerializer, PostDetailSerializer
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.models import User
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+# from rest_framework.views import APIView
+# from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 # def home(request):
 #     # if request.user.is_authenticated:
@@ -71,3 +78,59 @@ class PostUpdate(UpdateView):
     model = Post
     form_class = PostForm
     success_url = '/blog/'
+    pk_url_kwarg = 'pk'
+    template_name = 'main/post_form.html'
+
+    # def get_queryset(self):
+    #     print(self.request.GET.get('pk'))
+    #     return Post.objects.get(pk=self.request.GET.get('pk'))
+    #
+    # def get_object(self, queryset=None):
+    #     inst = Post.objects.get(pk=self.kwargs.get('pk'))
+    #     if self.request.user == inst.author:
+    #         return inst
+
+
+# @api_view(['GET'])
+# def api_posts(request):
+#     if request.method == "GET":
+#         posts = Post.objects.all()
+#         serializer = PostSerializer(posts, many=True)
+#         return Response(serializer.data)
+
+
+# class APIPosts(APIView):
+#     def get(self, request):
+#         posts = Post.objects.all()
+#         serializer = PostSerializer(posts, many=True)
+#         return Response(serializer.data)
+#
+#     def post(self, request):
+#         serializer = PostSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# class APIPosts(ListCreateAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#
+#
+# class APIDetailPosts(RetrieveUpdateDestroyAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+
+class APIPostsViewSet(ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
+
+
+@api_view(['GET'])
+def api_detail_posts(request, pk):
+    if request.method == "GET":
+        posts = Post.objects.get(pk=pk)
+        serializer = PostDetailSerializer(posts)
+        return Response(serializer.data)

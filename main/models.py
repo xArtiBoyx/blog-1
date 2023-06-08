@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models.signals import post_save
 
 
 User = get_user_model()
@@ -20,3 +21,15 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# Обработчик сигнала post_save
+def post_save_dispatcher(sender, **kwargs):
+    inst = kwargs['instance']  # instance, created, raw, update_fields
+    if kwargs['created']:
+        print(f'+++ Была создана запись {inst.title}\n+++ содержащая следующий текст: {inst.body[:40]}...')
+    elif not kwargs['created']:
+        print(f'+++ Запись "{inst.title}"\n+++ содержащая следующий текст: "{inst.body[:40]}", была обновлена.')
+
+
+post_save.connect(post_save_dispatcher, sender=Post)
