@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.text }}</p>
+    <p>{{ post.created_at }}</p>
+    <p>Автор: {{ post.author }}</p>
+
+    <hr>
+
+    <h2>Комментарии:</h2>
+    <ul>
+    {% for comment in comments %}
+        <li>{{ comment.text }} - {{ comment.author }} ({{ comment.created_at }})</li>
+    {% empty %}
+        <li>Нет комментариев</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Оставить комментарий:</h3>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить</button>
+    </form>
+    <a href="{% url 'home' %}"><button>На главную</button></a>
+{% endblock content %}

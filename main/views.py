@@ -1,8 +1,9 @@
 # from rest_framework import status
-
-from .models import Post
-from .forms import PostForm
-from .serializers import PostSerializer, PostDetailSerializer
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
+from .serializers import PostDetailSerializer
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.models import User
 from rest_framework.response import Response
@@ -50,15 +51,45 @@ class PostList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admin_user'] = User.objects.get(id=1)
+        if 'counter' in self.request.session:
+            self.request.session['counter'] += 1
+            print(f'------------ counter={self.request.session["counter"]}')
+        else:
+            self.request.session['counter'] = 1
         return context
+
+    # def render_to_response(self, context, **response_kwargs):
+    #     response = super().render_to_response(context, **response_kwargs)
+    #     if 'counter' in self.request.COOKIES:
+    #         cnt = int(self.request.COOKIES.get('counter')) + 1
+    #         response.set_cookie('counter', cnt)
+    #         # print(f'====================== cnt: {cnt} type: {type: cnt}')
+    #     else:
+    #         response.set_cookie('counter', 1, max_age=5)
+    #     return response
 
 
 # def get_queryset(self):
 #     return Post.objects.all().order_by('-created_at')
 
-
 class PostDetail(DetailView):
     model = Post
+
+
+@login_required
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    comments = post.comments.all()
+    form = CommentForm()
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+            form = CommentForm()
+    return render(request, 'main/comments.html', {'post': post, 'comments': comments, 'form': form})
 
 
 class PostCreate(CreateView):
@@ -91,6 +122,19 @@ class PostUpdate(UpdateView):
     #         return inst
 
 
+# def comments(request):
+#     comment = Comment.objects.all()
+#     form = CommentForm()
+#     pk_url_kwarg = 'pk'
+#     template_name = 'main/comments.html'
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             form = CommentForm()
+#     return render(request, 'comments.html', {'comments': comment, 'form': form})
+
+
 # @api_view(['GET'])
 # def api_posts(request):
 #     if request.method == "GET":
@@ -121,7 +165,6 @@ class PostUpdate(UpdateView):
 # class APIDetailPosts(RetrieveUpdateDestroyAPIView):
 #     queryset = Post.objects.all()
 #     serializer_class = PostSerializer
-
 
 class APIPostsViewSet(ModelViewSet):
     queryset = Post.objects.all()

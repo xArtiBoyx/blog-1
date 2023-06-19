@@ -6,10 +6,10 @@
 {% endblock title %}
 
 {% block content %}
-    <p>Администратор сайта: {{ admin_user.last_name }} {{ admin_user.first_name }}</p>
     {% if user.is_authenticated %}
         <a href="{% url 'logout' %}">Выйти</a>
         <p><a href="{% url 'profile' %}">Профиль</a></p>
+        <p><a href="{% url 'post_create' %}">Добавить пост</a></p>
         <h3>Здравствуйте {{ user.first_name }}!</h3>
         <h1 id="head">Посты</h1>
     {% for post in posts %}
@@ -17,7 +17,10 @@
             <a href="{% url 'post_detail' pk=post.pk %}"><h3 id="title">{{ post.title }}</h3></a>
             <p id="post">{{ post.body|truncatewords:30 }}</p>
             <p id="time">Time: {{ post.created_at }}</p>
+            <hr>
+            <a href="{% url 'comments' pk=post.pk %}">Комментарии...</a>
         </div>
+        <hr>
     {% endfor %}
     {% else %}
     <a href="{% url 'login' %}"> Войти</a>

@@ -18,14 +18,14 @@ class UserRegistrationForm(forms.ModelForm):
         return cd['password2']
 
 
-class ProfileEdit(forms.ModelForm):
-    first_name = forms.CharField(label='Имя')
-    last_name = forms.CharField(label='Фамилия')
-    email = forms.EmailField()
-
-    class Meta:
-        model = Profile
-        fields = ['about_me', 'date_of_birth']
+# class ProfileEdit(forms.ModelForm):
+#     first_name = forms.CharField(label='Имя')
+#     last_name = forms.CharField(label='Фамилия')
+#     email = forms.EmailField()
+#
+#     class Meta:
+#         model = Profile
+#         fields = ['about_me', 'date_of_birth']
 
 
 class UserForm(forms.ModelForm):

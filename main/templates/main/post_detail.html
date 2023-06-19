@@ -7,10 +7,13 @@
 
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
+<h1 xmlns="http://www.w3.org/1999/html">{{ post.title }}</h1>
     <p>{{ post.body }}</p>
+
     <p>Автор: {{ post.author.last_name }} {{ post.author.first_name }}. Создан: {{ post.created_at }}</p>
     {% if user == post.author %}
         <a href="{% url 'post_update' pk=post.pk %}"><button>Изменить пост</button></a>
+        <a href="{% url 'profile' %}"><button>Профиль</button></a>
     {% endif %}
+    <a href="{% url 'home' %}"><button>На главную</button></a>
 {% endblock content %}

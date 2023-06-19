@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 # from .views import home, post_detail, post_create
-from .views import PostList, PostDetail, PostCreate, PostUpdate, APIPostsViewSet
+from .views import PostList, PostDetail, PostCreate, PostUpdate, APIPostsViewSet, post_detail
 
 # api_detail_posts, APIPosts, APIDetailPosts
 
@@ -17,4 +17,4 @@ urlpatterns = [
     # path('api/posts', APIPosts.as_view(), name='api_posts'),
     # path('api/posts/<int:pk>', APIDetailPosts.as_view(), name='api_posts_upd'),
     path('api/', include(router.urls)),
-]
+    path('comments/<int:pk>', post_detail, name='comments')]
