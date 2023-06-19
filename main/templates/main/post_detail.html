@@ -16,4 +16,5 @@
         <a href="{% url 'profile' %}"><button>Профиль</button></a>
     {% endif %}
     <a href="{% url 'home' %}"><button>На главную</button></a>
+    <a href="{% url 'comments' pk=post.pk %}"><button>Комментарии</button></a>
 {% endblock content %}
